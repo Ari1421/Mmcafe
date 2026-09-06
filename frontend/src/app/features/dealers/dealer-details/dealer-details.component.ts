@@ -81,11 +81,19 @@ export class DealerDetailsComponent implements OnInit {
   private async reloadAll(): Promise<void> {
     this.loading.set(true);
     try {
-      await this.dealerService.loadAll();
-      const dealer = await this.dealerService.getById(this.dealerId);
+      // These four calls are independent of one another — running them
+      // sequentially made the page wait for four round trips in a row.
+      // Promise.all fires them together so total wait time is just the
+      // slowest one, not the sum of all four.
+      const [, dealer, ledger, rates] = await Promise.all([
+        this.dealerService.loadAll(),
+        this.dealerService.getById(this.dealerId),
+        this.dealerService.getLedger(this.dealerId),
+        this.dealerService.getRatesForDealer(this.dealerId)
+      ]);
       this.dealer.set(dealer);
-      this.ledger.set(await this.dealerService.getLedger(this.dealerId));
-      this.rates.set(await this.dealerService.getRatesForDealer(this.dealerId));
+      this.ledger.set(ledger);
+      this.rates.set(rates);
     } catch (err) {
       this.errorHandler.handle(err, 'Dealer Details');
     } finally {

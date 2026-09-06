@@ -27,8 +27,9 @@ export class SalaryListComponent implements OnInit {
   readonly selectedMonth = signal<Date>(startOfMonth(new Date()));
 
   async ngOnInit(): Promise<void> {
-    await this.staffService.loadAll();
-    await this.reload();
+    // Independent requests — the staff list and this month's salaries
+    // don't depend on each other, so fetch them together.
+    await Promise.all([this.staffService.loadAll(), this.reload()]);
   }
 
   async reload(): Promise<void> {

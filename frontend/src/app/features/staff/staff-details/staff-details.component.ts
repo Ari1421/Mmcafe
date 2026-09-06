@@ -65,8 +65,14 @@ export class StaffDetailsComponent implements OnInit {
   private async reload(): Promise<void> {
     this.loading.set(true);
     try {
-      this.staff.set(await this.staffService.getById(this.staffId));
-      this.advances.set(await this.advanceService.getForStaff(this.staffId));
+      // Independent lookups — fetch both at once instead of one after
+      // the other.
+      const [staff, advances] = await Promise.all([
+        this.staffService.getById(this.staffId),
+        this.advanceService.getForStaff(this.staffId)
+      ]);
+      this.staff.set(staff);
+      this.advances.set(advances);
     } catch (err) {
       this.errorHandler.handle(err, 'Staff Details');
     } finally {
