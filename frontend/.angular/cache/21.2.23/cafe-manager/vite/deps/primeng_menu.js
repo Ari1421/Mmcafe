@@ -31,15 +31,6 @@ import {
   BaseStyle
 } from "./chunk-IJMDVFBE.js";
 import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-JNUVRQVR.js";
-import {
-  DomSanitizer
-} from "./chunk-ZTCID433.js";
-import "./chunk-IFKTJQXC.js";
-import {
   OverlayService,
   PrimeTemplate,
   SharedModule
@@ -54,6 +45,15 @@ import {
   s2 as s,
   ut
 } from "./chunk-6VCYEF6R.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-JNUVRQVR.js";
+import {
+  DomSanitizer
+} from "./chunk-ZTCID433.js";
+import "./chunk-IFKTJQXC.js";
 import {
   CommonModule,
   NgForOf,

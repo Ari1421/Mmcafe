@@ -7,18 +7,11 @@ import {
 import {
   BaseEditableHolder
 } from "./chunk-HV4RZTM3.js";
-import {
-  InputText
-} from "./chunk-M5OZEP7K.js";
-import "./chunk-QPFHJIS6.js";
 import "./chunk-3WXT4SWY.js";
 import "./chunk-4X377WSO.js";
 import {
   AutoFocus
 } from "./chunk-KDWPWJNU.js";
-import {
-  Fluid
-} from "./chunk-OYEBJRDI.js";
 import {
   ConnectedOverlayScrollHandler,
   DomHandler
@@ -29,6 +22,13 @@ import {
   TimesIcon
 } from "./chunk-NSFQ2B6W.js";
 import {
+  InputText
+} from "./chunk-M5OZEP7K.js";
+import "./chunk-QPFHJIS6.js";
+import {
+  Fluid
+} from "./chunk-OYEBJRDI.js";
+import {
   PARENT_INSTANCE
 } from "./chunk-RGHGM72W.js";
 import {
@@ -38,9 +38,6 @@ import {
 import {
   BaseStyle
 } from "./chunk-IJMDVFBE.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-RHULJKPQ.js";
 import {
   OverlayService,
   PrimeTemplate,
@@ -54,6 +51,9 @@ import {
   Yt,
   k2 as k
 } from "./chunk-6VCYEF6R.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-RHULJKPQ.js";
 import {
   CommonModule,
   NgIf,
