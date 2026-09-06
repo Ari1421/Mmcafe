@@ -1,0 +1,64 @@
+<div class="page-header">
+  <h2>Products (Milk / Curd)</h2>
+  @if (auth.isAdmin()) {
+    <button pButton icon="pi pi-plus" label="Add Product" (click)="openCreate()"></button>
+  }
+</div>
+
+<div class="surface-card">
+  <p-table [value]="productService.products()" [loading]="productService.loading()" responsiveLayout="stack" [breakpoint]="'768px'">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Unit</th>
+        <th>Default Rate</th>
+        <th>Status</th>
+        @if (auth.isAdmin()) { <th>Actions</th> }
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.unit }}</td>
+        <td>{{ product.defaultRate | inrCurrency }}</td>
+        <td>
+          <p-tag [severity]="product.active ? 'success' : 'danger'" [value]="product.active ? 'Active' : 'Inactive'"></p-tag>
+        </td>
+        @if (auth.isAdmin()) {
+          <td>
+            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(product)"></button>
+            <button pButton [icon]="product.active ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleActive(product)"></button>
+          </td>
+        }
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5">No products yet.</td></tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [(visible)]="dialogOpen" [modal]="true" [style]="{width: '420px'}" [header]="editing() ? 'Edit Product' : 'Add Product'">
+  <form [formGroup]="form" (ngSubmit)="save()" class="dialog-form">
+    <div class="field">
+      <label for="name">Product Name</label>
+      <input id="name" pInputText formControlName="name" class="w-full" />
+    </div>
+    <div class="field">
+      <label for="unit">Unit</label>
+      <input id="unit" pInputText formControlName="unit" class="w-full" />
+    </div>
+    <div class="field">
+      <label for="defaultRate">Default Rate (per {{ form.value.unit }})</label>
+      <p-inputNumber id="defaultRate" formControlName="defaultRate" mode="currency" currency="INR" locale="en-IN" [min]="0" styleClass="w-full"></p-inputNumber>
+    </div>
+    <div class="field field-inline">
+      <label>Active</label>
+      <p-toggleswitch formControlName="active"></p-toggleswitch>
+    </div>
+    <div class="dialog-actions">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="dialogOpen.set(false)"></button>
+      <button pButton type="submit" label="Save" icon="pi pi-check" [loading]="submitting()"></button>
+    </div>
+  </form>
+</p-dialog>

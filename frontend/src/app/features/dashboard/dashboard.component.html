@@ -1,0 +1,72 @@
+<div class="page-header">
+  <h2>Dashboard</h2>
+  <span class="today-label">{{ todayLabel | indiaDate }}</span>
+</div>
+
+@if (dashboardService.summary(); as s) {
+  <div class="summary-grid">
+    <div class="surface-card summary-card">
+      <span class="label">Today's Total Sales</span>
+      <span class="value">{{ s.totalSales | inrCurrency }}</span>
+      <span class="sub">Cash {{ s.cashSales | inrCurrency }} · Online {{ s.onlineSales | inrCurrency }}</span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Today's Expenses</span>
+      <span class="value">{{ s.totalExpense | inrCurrency }}</span>
+      <span class="sub">Cash {{ s.cashExpenses | inrCurrency }} · Online {{ s.onlineExpenses | inrCurrency }}</span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Net Income</span>
+      <span class="value" [class.negative]="s.netIncome < 0">{{ s.netIncome | inrCurrency }}</span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Milk / Curd Purchased Today</span>
+      <span class="value">{{ s.milkQty }} L / {{ s.curdQty }} L</span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Outstanding Dealer Credit</span>
+      <span class="value">{{ s.dealerOutstandingTotal | inrCurrency }}</span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Staff Present / Absent</span>
+      <span class="value">{{ s.staffPresent }} / {{ s.staffAbsent }}</span>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="surface-card chart-card">
+      <h3>Sales Breakdown (Today)</h3>
+      <p-chart type="doughnut" [data]="salesPieData()" [options]="chartOptions" height="220px"></p-chart>
+    </div>
+    <div class="surface-card chart-card">
+      <h3>Daily Sales Trend (Last 7 Days)</h3>
+      <p-chart type="line" [data]="trendLineData()" [options]="chartOptions" height="220px"></p-chart>
+    </div>
+    <div class="surface-card chart-card">
+      <h3>Expense Breakdown (This Month)</h3>
+      @if (dashboardService.expenseBreakdown().length > 0) {
+        <p-chart type="pie" [data]="expensePieData()" [options]="chartOptions" height="220px"></p-chart>
+      } @else {
+        <p class="empty-note">No expenses recorded this month yet.</p>
+      }
+    </div>
+  </div>
+
+  <div class="surface-card quick-actions">
+    <h3>Quick Actions</h3>
+    <div class="actions-row">
+      @if (auth.hasPermission('canAddSales')) {
+        <button pButton label="Add Sale" icon="pi pi-indian-rupee" (click)="addSale()"></button>
+      }
+      @if (auth.hasPermission('canAddExpenses')) {
+        <button pButton label="Add Expense" icon="pi pi-wallet" class="p-button-outlined" (click)="addExpense()"></button>
+        <button pButton label="Add Milk/Curd Purchase" icon="pi pi-shopping-cart" class="p-button-outlined" (click)="addPurchase()"></button>
+      }
+      @if (auth.hasPermission('canAddAttendance')) {
+        <button pButton label="Mark Attendance" icon="pi pi-calendar-check" class="p-button-outlined" (click)="markAttendance()"></button>
+      }
+    </div>
+  </div>
+} @else if (dashboardService.loading()) {
+  <p class="loading-note">Loading dashboard…</p>
+}

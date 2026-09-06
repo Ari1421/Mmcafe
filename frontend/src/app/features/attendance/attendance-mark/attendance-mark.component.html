@@ -1,0 +1,52 @@
+<div class="page-header">
+  <h2>Mark Attendance</h2>
+  <div class="header-actions">
+    <p-datepicker
+      [ngModel]="selectedDate()"
+      (ngModelChange)="selectedDate.set($event); loadDay()"
+      dateFormat="dd-mm-yy"
+      [showIcon]="true">
+    </p-datepicker>
+    <button pButton label="Mark All Present" icon="pi pi-check-circle" class="p-button-outlined" (click)="markAllPresent()"></button>
+    <button pButton label="Save Attendance" icon="pi pi-save" [loading]="saving()" [disabled]="!canEdit()" (click)="save()"></button>
+  </div>
+</div>
+
+@if (isPastDate() && !canEdit()) {
+  <div class="surface-card warning-banner">
+    <i class="pi pi-lock"></i>
+    Editing past attendance is disabled in Settings. Only Admin can edit previous dates.
+  </div>
+}
+
+<div class="surface-card">
+  <p-table [value]="rows()" [loading]="loading()" responsiveLayout="stack" [breakpoint]="'768px'">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Employee</th>
+        <th>Designation</th>
+        <th>Status</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.staffName }}</td>
+        <td>{{ row.designation || '—' }}</td>
+        <td>
+          <p-select
+            [ngModel]="row.currentStatus"
+            (ngModelChange)="setStatus(row, $event)"
+            [options]="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+            [disabled]="!canEdit()"
+            styleClass="status-select">
+          </p-select>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="3">No active staff to mark attendance for.</td></tr>
+    </ng-template>
+  </p-table>
+</div>

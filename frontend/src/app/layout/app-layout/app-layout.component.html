@@ -1,0 +1,14 @@
+<div class="app-shell">
+  <app-sidebar [mobileOpen]="mobileSidebarOpen()" (navigate)="closeSidebar()"></app-sidebar>
+
+  @if (mobileSidebarOpen()) {
+    <div class="sidebar-backdrop" (click)="closeSidebar()"></div>
+  }
+
+  <div class="app-main">
+    <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+    <main class="app-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

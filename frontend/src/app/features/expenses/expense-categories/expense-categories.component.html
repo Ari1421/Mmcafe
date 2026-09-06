@@ -1,0 +1,38 @@
+<div class="page-header">
+  <h2>Expense Categories</h2>
+  <button pButton icon="pi pi-plus" label="Add Category" (click)="openCreate()"></button>
+</div>
+
+<div class="surface-card">
+  <p-table [value]="categoryService.categories()" [loading]="categoryService.loading()" responsiveLayout="stack" [breakpoint]="'768px'">
+    <ng-template pTemplate="header">
+      <tr><th>Name</th><th>Status</th><th>Actions</th></tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-category>
+      <tr>
+        <td>{{ category.name }}</td>
+        <td><p-tag [severity]="category.active ? 'success' : 'danger'" [value]="category.active ? 'Active' : 'Inactive'"></p-tag></td>
+        <td>
+          <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(category)"></button>
+          <button pButton [icon]="category.active ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleActive(category)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="3">No categories yet.</td></tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [(visible)]="dialogOpen" [modal]="true" [style]="{width: '380px'}" [header]="editing() ? 'Edit Category' : 'Add Category'">
+  <form [formGroup]="form" (ngSubmit)="save()" class="dialog-form">
+    <div class="field">
+      <label for="name">Category Name</label>
+      <input id="name" pInputText formControlName="name" class="w-full" />
+    </div>
+    <div class="dialog-actions">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="dialogOpen.set(false)"></button>
+      <button pButton type="submit" label="Save" icon="pi pi-check" [loading]="submitting()"></button>
+    </div>
+  </form>
+</p-dialog>

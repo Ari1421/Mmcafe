@@ -1,0 +1,39 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  h2 { margin: 0; }
+  .today-label { color: var(--text-secondary); font-size: 0.9rem; }
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  .label { font-size: 0.8rem; color: var(--text-secondary); }
+  .value { font-size: 1.5rem; font-weight: 700; }
+  .value.negative { color: var(--danger); }
+  .sub { font-size: 0.75rem; color: var(--text-secondary); }
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.chart-card h3 { margin-top: 0; }
+.empty-note, .loading-note { color: var(--text-secondary); font-size: 0.9rem; }
+
+.quick-actions h3 { margin-top: 0; }
+.actions-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }

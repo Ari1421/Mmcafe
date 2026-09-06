@@ -1,0 +1,71 @@
+<div class="page-header">
+  <h2>Milk &amp; Curd Purchases</h2>
+  @if (auth.hasPermission('canAddExpenses')) {
+    <button pButton icon="pi pi-plus" label="Add Purchase" (click)="addPurchase()"></button>
+  }
+</div>
+
+<div class="surface-card filters">
+  <div class="filter-field">
+    <label>From</label>
+    <p-datepicker [ngModel]="dateFrom()" (ngModelChange)="dateFrom.set($event); applyFilter()" dateFormat="dd-mm-yy" [showIcon]="true" [showButtonBar]="true"></p-datepicker>
+  </div>
+  <div class="filter-field">
+    <label>To</label>
+    <p-datepicker [ngModel]="dateTo()" (ngModelChange)="dateTo.set($event); applyFilter()" dateFormat="dd-mm-yy" [showIcon]="true" [showButtonBar]="true"></p-datepicker>
+  </div>
+  <div class="filter-field">
+    <label>Dealer</label>
+    <p-select [ngModel]="dealerId()" (ngModelChange)="dealerId.set($event); applyFilter()" [options]="dealerService.dealers()" optionLabel="name" optionValue="id" [showClear]="true" placeholder="All dealers"></p-select>
+  </div>
+  <div class="filter-field">
+    <label>Product</label>
+    <p-select [ngModel]="productId()" (ngModelChange)="productId.set($event); applyFilter()" [options]="productService.products()" optionLabel="name" optionValue="id" [showClear]="true" placeholder="All products"></p-select>
+  </div>
+</div>
+
+<div class="summary-strip surface-card">
+  <div><span class="label">Total Quantity</span><span class="value">{{ purchaseService.totalQuantity }} L</span></div>
+  <div><span class="label">Total Amount</span><span class="value">{{ purchaseService.totalAmount | inrCurrency }}</span></div>
+</div>
+
+<div class="surface-card">
+  <p-table [value]="purchaseService.purchases()" [loading]="purchaseService.loading()" [paginator]="true" [rows]="20" responsiveLayout="stack" [breakpoint]="'768px'">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Date</th>
+        <th>Dealer</th>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Rate</th>
+        <th>Total</th>
+        <th>Payment</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-purchase>
+      <tr>
+        <td>{{ purchase.purchaseDate | indiaDate }}</td>
+        <td>{{ purchase.dealerName }}</td>
+        <td>{{ purchase.productName }}</td>
+        <td>{{ purchase.quantity }} {{ purchase.unit }}</td>
+        <td>{{ purchase.rate | inrCurrency }}</td>
+        <td>{{ purchase.totalAmount | inrCurrency }}</td>
+        <td class="capitalize">{{ purchase.paymentType }}</td>
+        <td>
+          @if (auth.hasPermission('canAddExpenses')) {
+            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editPurchase(purchase.id)"></button>
+          }
+          @if (auth.hasPermission('canDeleteRecords')) {
+            <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger" (click)="confirmDelete(purchase.id, $event)"></button>
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="8">No purchases found for the selected filters.</td></tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmDialog></p-confirmDialog>

@@ -1,0 +1,137 @@
+@if (dealer(); as d) {
+  <div class="page-header">
+    <div>
+      <h2>{{ d.name }}</h2>
+      <p class="subtitle">{{ d.mobile || 'No mobile on file' }} @if (d.address) { · {{ d.address }} }</p>
+    </div>
+    <div class="header-actions">
+      @if (auth.isAdmin()) {
+        <button pButton label="Manage Rates" icon="pi pi-tags" class="p-button-outlined" (click)="openRateDialog()"></button>
+      }
+      @if (auth.hasPermission('canAddExpenses')) {
+        <button pButton label="Record Payment" icon="pi pi-plus" (click)="openPaymentDialog()"></button>
+      }
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="surface-card summary-card">
+      <span class="label">Opening Balance</span>
+      <span class="value">{{ d.openingBalance | inrCurrency }}</span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Outstanding Balance</span>
+      <span class="value negative-balance">{{ outstanding() | inrCurrency }}</span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Status</span>
+      <p-tag [severity]="d.active ? 'success' : 'danger'" [value]="d.active ? 'Active' : 'Inactive'"></p-tag>
+    </div>
+  </div>
+
+  <div class="surface-card">
+    <h3>Ledger</h3>
+    <p-table [value]="ledger()" [loading]="loading()" responsiveLayout="stack" [breakpoint]="'768px'">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Debit</th>
+          <th>Credit</th>
+          <th>Balance</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-entry>
+        <tr>
+          <td>{{ entry.entryDate | indiaDate }}</td>
+          <td>{{ entry.description }}</td>
+          <td>{{ entry.debit ? (entry.debit | inrCurrency) : '—' }}</td>
+          <td>{{ entry.credit ? (entry.credit | inrCurrency) : '—' }}</td>
+          <td>{{ entry.runningBalance | inrCurrency }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="5">No transactions yet.</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  @if (auth.isAdmin()) {
+    <div class="surface-card rates-card">
+      <h3>Dealer Product Rates</h3>
+      <p-table [value]="rates()" responsiveLayout="stack" [breakpoint]="'768px'">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Product</th>
+            <th>Rate</th>
+            <th>Effective From</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rate>
+          <tr>
+            <td>{{ rate.productName }}</td>
+            <td>{{ rate.rate | inrCurrency }}</td>
+            <td>{{ rate.effectiveFrom | indiaDate }}</td>
+            <td><p-tag [severity]="rate.active ? 'success' : 'danger'" [value]="rate.active ? 'Active' : 'Inactive'"></p-tag></td>
+            <td>
+              <button pButton [icon]="rate.active ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleRateActive(rate)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr><td colspan="5">No dealer-specific rates set — product default rate applies.</td></tr>
+        </ng-template>
+      </p-table>
+    </div>
+  }
+}
+
+<!-- Record Payment Dialog -->
+<p-dialog [(visible)]="paymentDialogOpen" [modal]="true" [style]="{width: '420px'}" header="Record Dealer Payment">
+  <form [formGroup]="paymentForm" (ngSubmit)="savePayment()" class="dialog-form">
+    <div class="field">
+      <label for="paymentDate">Date</label>
+      <p-datepicker id="paymentDate" formControlName="paymentDate" dateFormat="dd-mm-yy" [showIcon]="true" styleClass="w-full"></p-datepicker>
+    </div>
+    <div class="field">
+      <label for="amount">Amount</label>
+      <p-inputNumber id="amount" formControlName="amount" mode="currency" currency="INR" locale="en-IN" [min]="0.01" styleClass="w-full"></p-inputNumber>
+    </div>
+    <div class="field">
+      <label for="paymentMode">Payment Mode</label>
+      <p-select id="paymentMode" formControlName="paymentMode" [options]="paymentModeOptions" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
+    </div>
+    <div class="field">
+      <label for="referenceNumber">Reference Number</label>
+      <input id="referenceNumber" pInputText formControlName="referenceNumber" class="w-full" />
+    </div>
+    <div class="dialog-actions">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="paymentDialogOpen.set(false)"></button>
+      <button pButton type="submit" label="Save" icon="pi pi-check" [loading]="submittingPayment()"></button>
+    </div>
+  </form>
+</p-dialog>
+
+<!-- Manage Rates Dialog -->
+<p-dialog [(visible)]="rateDialogOpen" [modal]="true" [style]="{width: '420px'}" header="Add Dealer Rate">
+  <form [formGroup]="rateForm" (ngSubmit)="saveRate()" class="dialog-form">
+    <div class="field">
+      <label for="productId">Product</label>
+      <p-select id="productId" formControlName="productId" [options]="productService.activeProducts()" optionLabel="name" optionValue="id" styleClass="w-full" placeholder="Select product"></p-select>
+    </div>
+    <div class="field">
+      <label for="rate">Rate</label>
+      <p-inputNumber id="rate" formControlName="rate" mode="currency" currency="INR" locale="en-IN" [min]="0.01" styleClass="w-full"></p-inputNumber>
+    </div>
+    <div class="field">
+      <label for="effectiveFrom">Effective From</label>
+      <p-datepicker id="effectiveFrom" formControlName="effectiveFrom" dateFormat="dd-mm-yy" [showIcon]="true" styleClass="w-full"></p-datepicker>
+    </div>
+    <div class="dialog-actions">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="rateDialogOpen.set(false)"></button>
+      <button pButton type="submit" label="Save" icon="pi pi-check" [loading]="submittingRate()"></button>
+    </div>
+  </form>
+</p-dialog>

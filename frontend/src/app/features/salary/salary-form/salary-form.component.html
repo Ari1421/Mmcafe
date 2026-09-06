@@ -1,0 +1,78 @@
+@if (staff(); as s) {
+  <div class="page-header">
+    <h2>Salary — {{ s.name }} ({{ salaryMonth() }})</h2>
+    <button pButton label="Recalculate from Attendance" icon="pi pi-refresh" class="p-button-outlined" (click)="recalculate()"></button>
+  </div>
+
+  @if (draft(); as d) {
+    <div class="surface-card slip-card">
+      <h3>Attendance Summary</h3>
+      <div class="summary-grid">
+        <div><span class="label">Working Days</span><span class="value">{{ d.workingDays }}</span></div>
+        <div><span class="label">Present</span><span class="value">{{ d.presentDays }}</span></div>
+        <div><span class="label">Absent</span><span class="value">{{ d.absentDays }}</span></div>
+        <div><span class="label">Half Day</span><span class="value">{{ d.halfDays }}</span></div>
+        <div><span class="label">Paid Leave</span><span class="value">{{ d.paidLeaveDays }}</span></div>
+        <div><span class="label">Unpaid Leave</span><span class="value">{{ d.unpaidLeaveDays }}</span></div>
+        <div><span class="label">Daily Rate</span><span class="value">{{ d.dailyRate | inrCurrency }}</span></div>
+      </div>
+    </div>
+  }
+
+  <div class="surface-card slip-card">
+    <h3>Salary Slip</h3>
+    <form [formGroup]="form" (ngSubmit)="save()" class="salary-form">
+      <div class="line-item">
+        <span>Base Salary</span>
+        <strong>{{ s.monthlySalary | inrCurrency }}</strong>
+      </div>
+
+      <div class="field">
+        <label for="deduction">Attendance Deduction</label>
+        <p-inputNumber id="deduction" formControlName="deduction" mode="currency" currency="INR" locale="en-IN" [min]="0" styleClass="w-full"></p-inputNumber>
+      </div>
+      <div class="field">
+        <label for="advanceDeduction">Advance Deduction</label>
+        <p-inputNumber id="advanceDeduction" formControlName="advanceDeduction" mode="currency" currency="INR" locale="en-IN" [min]="0" styleClass="w-full"></p-inputNumber>
+      </div>
+      <div class="field">
+        <label for="bonus">Bonus</label>
+        <p-inputNumber id="bonus" formControlName="bonus" mode="currency" currency="INR" locale="en-IN" [min]="0" styleClass="w-full"></p-inputNumber>
+      </div>
+      <div class="field">
+        <label for="adjustment">Other Adjustment (+/-)</label>
+        <p-inputNumber id="adjustment" formControlName="adjustment" mode="currency" currency="INR" locale="en-IN" styleClass="w-full"></p-inputNumber>
+      </div>
+
+      <div class="line-item total">
+        <span>Final Salary</span>
+        <strong>{{ finalSalary() | inrCurrency }}</strong>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="paymentStatus">Payment Status</label>
+          <p-select id="paymentStatus" formControlName="paymentStatus" [options]="paymentStatusOptions" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
+        </div>
+        <div class="field">
+          <label for="paymentMode">Payment Mode</label>
+          <p-select id="paymentMode" formControlName="paymentMode" [options]="paymentModeOptions" optionLabel="label" optionValue="value" styleClass="w-full" placeholder="—"></p-select>
+        </div>
+        <div class="field">
+          <label for="paymentDate">Payment Date</label>
+          <p-datepicker id="paymentDate" formControlName="paymentDate" dateFormat="dd-mm-yy" [showIcon]="true" styleClass="w-full"></p-datepicker>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="notes">Notes</label>
+        <textarea id="notes" pTextarea formControlName="notes" rows="2" class="w-full"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button pButton type="button" label="Cancel" class="p-button-text" (click)="cancel()"></button>
+        <button pButton type="submit" label="Save Salary" icon="pi pi-check" [loading]="submitting()"></button>
+      </div>
+    </form>
+  </div>
+}

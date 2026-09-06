@@ -1,0 +1,59 @@
+<div class="page-header">
+  <h2>Daily Closing</h2>
+  <p-datepicker [ngModel]="selectedDate()" (ngModelChange)="selectedDate.set($event); loadDay()" dateFormat="dd-mm-yy" [showIcon]="true"></p-datepicker>
+</div>
+
+@if (isClosed()) {
+  <div class="surface-card status-banner closed">
+    <i class="pi pi-lock"></i> This day is closed.
+    @if (auth.isAdmin()) {
+      <button pButton label="Reopen Day" icon="pi pi-lock-open" class="p-button-text p-button-sm" (click)="confirmReopen()"></button>
+    }
+  </div>
+}
+
+<div class="surface-card closing-card">
+  <div class="line-item">
+    <span>Opening Cash</span>
+    <p-inputNumber [ngModel]="openingCash()" (ngModelChange)="openingCash.set($event)" mode="currency" currency="INR" locale="en-IN" [disabled]="isClosed()"></p-inputNumber>
+  </div>
+
+  @if (cashFlow(); as cf) {
+    <div class="line-item"><span>+ Cash Sales</span><strong>{{ cf.cashSales | inrCurrency }}</strong></div>
+    <div class="line-item"><span>− Cash Expenses</span><strong>{{ cf.cashExpenses | inrCurrency }}</strong></div>
+    <div class="line-item"><span>− Dealer Cash Payments</span><strong>{{ cf.dealerCashPayments | inrCurrency }}</strong></div>
+    <div class="line-item"><span>− Staff Cash Advances</span><strong>{{ cf.staffCashAdvances | inrCurrency }}</strong></div>
+    <div class="line-item"><span>− Staff Salary (Cash)</span><strong>{{ cf.staffCashSalary | inrCurrency }}</strong></div>
+  }
+
+  <div class="line-item total">
+    <span>Expected Closing Cash</span>
+    <strong>{{ expectedCash() | inrCurrency }}</strong>
+  </div>
+
+  <div class="line-item">
+    <span>Actual Closing Cash</span>
+    <p-inputNumber [ngModel]="actualCash()" (ngModelChange)="actualCash.set($event)" mode="currency" currency="INR" locale="en-IN" [disabled]="isClosed()"></p-inputNumber>
+  </div>
+
+  @if (difference() !== null) {
+    <div class="line-item total" [class.negative]="difference()! < 0" [class.positive]="difference()! > 0">
+      <span>Cash Difference</span>
+      <strong>{{ difference()! | inrCurrency }}</strong>
+    </div>
+  }
+
+  <div class="field">
+    <label for="notes">Notes</label>
+    <textarea id="notes" pTextarea [ngModel]="notes()" (ngModelChange)="notes.set($event)" rows="2" class="w-full" [disabled]="isClosed()"></textarea>
+  </div>
+
+  @if (!isClosed()) {
+    <div class="form-actions">
+      <button pButton label="Save Draft" icon="pi pi-save" class="p-button-outlined" [loading]="saving()" (click)="saveDraft()"></button>
+      <button pButton label="Close Day" icon="pi pi-lock" (click)="confirmClose()"></button>
+    </div>
+  }
+</div>
+
+<p-confirmDialog></p-confirmDialog>

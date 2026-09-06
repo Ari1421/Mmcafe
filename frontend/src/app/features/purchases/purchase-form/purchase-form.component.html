@@ -1,0 +1,64 @@
+<div class="page-header">
+  <h2>{{ editingId() ? 'Edit Purchase' : 'Add Purchase' }}</h2>
+</div>
+
+<div class="surface-card form-card">
+  <form [formGroup]="form" (ngSubmit)="save()" class="purchase-form">
+    <div class="field">
+      <label for="purchaseDate">Date</label>
+      <p-datepicker id="purchaseDate" formControlName="purchaseDate" dateFormat="dd-mm-yy" [showIcon]="true" styleClass="w-full"></p-datepicker>
+    </div>
+
+    <div class="field">
+      <label for="dealerId">Dealer</label>
+      <p-select id="dealerId" formControlName="dealerId" [options]="dealerService.dealers()" optionLabel="name" optionValue="id" placeholder="Select dealer" styleClass="w-full"></p-select>
+      @if (form.controls.dealerId.invalid && form.controls.dealerId.touched) {
+        <small class="form-error">Dealer is required.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="productId">Product</label>
+      <p-select id="productId" formControlName="productId" [options]="productService.activeProducts()" optionLabel="name" optionValue="id" placeholder="Select product" styleClass="w-full"></p-select>
+      @if (form.controls.productId.invalid && form.controls.productId.touched) {
+        <small class="form-error">Product is required.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="quantity">Quantity ({{ form.value.unit }})</label>
+      <p-inputNumber id="quantity" formControlName="quantity" [minFractionDigits]="0" [maxFractionDigits]="3" [min]="0" styleClass="w-full"></p-inputNumber>
+    </div>
+
+    <div class="field">
+      <label for="rate">
+        Rate per {{ form.value.unit }}
+        @if (rateLoading()) { <i class="pi pi-spin pi-spinner"></i> }
+      </label>
+      <p-inputNumber id="rate" formControlName="rate" mode="currency" currency="INR" locale="en-IN" [min]="0" styleClass="w-full"></p-inputNumber>
+      @if (!auth.isAdmin()) {
+        <small class="hint">Rate loads automatically from the dealer's configured price. Only Admin can override it.</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="paymentType">Payment Type</label>
+      <p-select id="paymentType" formControlName="paymentType" [options]="paymentTypeOptions" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
+    </div>
+
+    <div class="field">
+      <label for="notes">Notes</label>
+      <textarea id="notes" pTextarea formControlName="notes" rows="2" class="w-full"></textarea>
+    </div>
+
+    <div class="total-display">
+      <span>Total Amount</span>
+      <strong>{{ currentTotal() | inrCurrency }}</strong>
+    </div>
+
+    <div class="form-actions">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="cancel()"></button>
+      <button pButton type="submit" label="Save" icon="pi pi-check" [loading]="submitting()"></button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,79 @@
+<div class="page-header">
+  <h2>Reports</h2>
+  <div class="header-actions">
+    <p-select [ngModel]="preset()" (ngModelChange)="preset.set($event); onPresetChange()" [options]="presetOptions" optionLabel="label" optionValue="value"></p-select>
+    @if (preset() === 'custom') {
+      <p-datepicker [ngModel]="customFrom()" (ngModelChange)="customFrom.set($event); applyCustomRange()" dateFormat="dd-mm-yy" placeholder="From" [showIcon]="true"></p-datepicker>
+      <p-datepicker [ngModel]="customTo()" (ngModelChange)="customTo.set($event); applyCustomRange()" dateFormat="dd-mm-yy" placeholder="To" [showIcon]="true"></p-datepicker>
+    }
+    <button pButton label="Export CSV" icon="pi pi-download" class="p-button-outlined" (click)="exportCsv()"></button>
+  </div>
+</div>
+
+<div class="summary-grid">
+  <div class="surface-card summary-card"><span class="label">Total Sales</span><span class="value">{{ reportsService.totals.totalSales | inrCurrency }}</span></div>
+  <div class="surface-card summary-card"><span class="label">Total Expense</span><span class="value">{{ reportsService.totals.totalExpense | inrCurrency }}</span></div>
+  <div class="surface-card summary-card"><span class="label">Net Profit</span><span class="value" [class.negative]="reportsService.totals.netIncome < 0">{{ reportsService.totals.netIncome | inrCurrency }}</span></div>
+  <div class="surface-card summary-card"><span class="label">Avg Daily Sales</span><span class="value">{{ reportsService.totals.avgDailySales | inrCurrency }}</span></div>
+  <div class="surface-card summary-card">
+    <span class="label">Highest Sales Day</span>
+    <span class="value">{{ reportsService.totals.highestSalesDay?.totalSales ?? 0 | inrCurrency }}</span>
+    <span class="sub">{{ reportsService.totals.highestSalesDay?.reportDate | indiaDate }}</span>
+  </div>
+  <div class="surface-card summary-card">
+    <span class="label">Lowest Sales Day</span>
+    <span class="value">{{ reportsService.totals.lowestSalesDay?.totalSales ?? 0 | inrCurrency }}</span>
+    <span class="sub">{{ reportsService.totals.lowestSalesDay?.reportDate | indiaDate }}</span>
+  </div>
+</div>
+
+<div class="summary-grid secondary">
+  <div class="surface-card summary-card small"><span class="label">Operating Expenses</span><span class="value">{{ reportsService.totals.totalOperatingExpenses | inrCurrency }}</span></div>
+  <div class="surface-card summary-card small"><span class="label">Purchases</span><span class="value">{{ reportsService.totals.totalPurchases | inrCurrency }}</span></div>
+  <div class="surface-card summary-card small"><span class="label">Staff Cost</span><span class="value">{{ reportsService.totals.totalStaffCost | inrCurrency }}</span></div>
+  <div class="surface-card summary-card small"><span class="label">Milk</span><span class="value">{{ reportsService.totals.milkQty }} L · {{ reportsService.totals.milkCost | inrCurrency }}</span></div>
+  <div class="surface-card summary-card small"><span class="label">Curd</span><span class="value">{{ reportsService.totals.curdQty }} L · {{ reportsService.totals.curdCost | inrCurrency }}</span></div>
+</div>
+
+<div class="charts-grid">
+  <div class="surface-card chart-card">
+    <h3>Sales / Expense / Profit Trend</h3>
+    <p-chart type="line" [data]="salesTrendData()" [options]="chartOptions" height="240px"></p-chart>
+  </div>
+  <div class="surface-card chart-card">
+    <h3>Cash vs Online</h3>
+    <p-chart type="bar" [data]="cashVsOnlineData()" [options]="chartOptions" height="240px"></p-chart>
+  </div>
+  <div class="surface-card chart-card">
+    <h3>Expense Category Breakdown</h3>
+    @if (reportsService.expenseBreakdown().length > 0) {
+      <p-chart type="pie" [data]="expensePieData()" [options]="chartOptions" height="240px"></p-chart>
+    } @else {
+      <p class="empty-note">No expenses in this range.</p>
+    }
+  </div>
+</div>
+
+<div class="surface-card">
+  <h3>Daily Breakdown</h3>
+  <p-table [value]="reportsService.days()" [loading]="reportsService.loading()" [paginator]="true" [rows]="14" responsiveLayout="stack" [breakpoint]="'768px'">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Date</th><th>Sales</th><th>Expenses</th><th>Net</th><th>Milk (L)</th><th>Curd (L)</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-day>
+      <tr>
+        <td>{{ day.reportDate | indiaDate }}</td>
+        <td>{{ day.totalSales | inrCurrency }}</td>
+        <td>{{ day.totalExpense | inrCurrency }}</td>
+        <td [class.negative]="day.netIncome < 0">{{ day.netIncome | inrCurrency }}</td>
+        <td>{{ day.milkQty }}</td>
+        <td>{{ day.curdQty }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="6">No data for the selected range.</td></tr>
+    </ng-template>
+  </p-table>
+</div>

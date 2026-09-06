@@ -1,0 +1,42 @@
+<div class="page-header">
+  <h2>{{ editingId() ? 'Edit Sales Entry' : 'Add Sales Entry' }}</h2>
+</div>
+
+<div class="surface-card form-card">
+  <form [formGroup]="form" (ngSubmit)="save()" class="sales-form">
+    <div class="field">
+      <label for="saleDate">Date</label>
+      <p-datepicker id="saleDate" formControlName="saleDate" dateFormat="dd-mm-yy" [showIcon]="true" styleClass="w-full" [disabled]="!!editingId()"></p-datepicker>
+      @if (checkingDate()) { <small class="hint"><i class="pi pi-spin pi-spinner"></i> Checking for an existing entry…</small> }
+    </div>
+
+    <div class="field">
+      <label for="cashAmount">Cash Sales</label>
+      <p-inputNumber id="cashAmount" formControlName="cashAmount" mode="currency" currency="INR" locale="en-IN" [min]="0" [minFractionDigits]="2" styleClass="w-full"></p-inputNumber>
+    </div>
+
+    <div class="field">
+      <label for="onlineAmount">Online Sales</label>
+      <p-inputNumber id="onlineAmount" formControlName="onlineAmount" mode="currency" currency="INR" locale="en-IN" [min]="0" [minFractionDigits]="2" styleClass="w-full"></p-inputNumber>
+    </div>
+
+    @if (form.errors?.['atLeastOne'] && form.touched) {
+      <small class="form-error">At least one of Cash Sales or Online Sales must be greater than zero.</small>
+    }
+
+    <div class="field">
+      <label for="notes">Notes</label>
+      <textarea id="notes" pTextarea formControlName="notes" rows="2" class="w-full"></textarea>
+    </div>
+
+    <div class="total-display">
+      <span>Total Sales</span>
+      <strong>{{ currentTotal() | inrCurrency }}</strong>
+    </div>
+
+    <div class="form-actions">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="cancel()"></button>
+      <button pButton type="submit" label="Save" icon="pi pi-check" [loading]="submitting()"></button>
+    </div>
+  </form>
+</div>

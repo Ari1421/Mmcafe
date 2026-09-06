@@ -1,0 +1,56 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-brand">
+      <i class="pi pi-shop"></i>
+      <h1>{{ cafeName }}</h1>
+      <p>Cafe Manager</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+      @if (errorMessage()) {
+        <p-message severity="error" [text]="errorMessage()!" styleClass="w-full"></p-message>
+      }
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          formControlName="email"
+          class="w-full"
+          autocomplete="username"
+          placeholder="you@example.com" />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <small class="form-error">Please enter a valid email address.</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          autocomplete="current-password" />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <small class="form-error">Password must be at least 6 characters.</small>
+        }
+      </div>
+
+      <button
+        pButton
+        type="submit"
+        label="Log In"
+        icon="pi pi-sign-in"
+        class="w-full"
+        [loading]="submitting()">
+      </button>
+
+      <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+    </form>
+  </div>
+</div>

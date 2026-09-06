@@ -1,0 +1,19 @@
+<aside class="sidebar" [class.open]="mobileOpen">
+  <div class="sidebar-brand">
+    <i class="pi pi-shop"></i>
+    <span>Madurai Meenakshi Cafe</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    @for (item of items(); track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="sidebar-link"
+        (click)="onNavigate()">
+        <i [class]="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+</aside>

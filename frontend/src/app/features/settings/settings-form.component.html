@@ -1,0 +1,91 @@
+<div class="page-header">
+  <h2>Settings</h2>
+  <a pButton routerLink="/settings/audit-log" icon="pi pi-history" label="Audit Log" class="p-button-outlined"></a>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="save()" class="settings-form">
+  <div class="surface-card section">
+    <h3>Cafe Information</h3>
+    <div class="grid-2">
+      <div class="field">
+        <label for="cafeName">Cafe Name</label>
+        <input id="cafeName" pInputText formControlName="cafeName" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input id="phone" pInputText formControlName="phone" class="w-full" />
+      </div>
+      <div class="field">
+        <label for="gstNumber">GST Number</label>
+        <input id="gstNumber" pInputText formControlName="gstNumber" class="w-full" />
+      </div>
+      <div class="field span-2">
+        <label for="address">Address</label>
+        <input id="address" pInputText formControlName="address" class="w-full" />
+      </div>
+    </div>
+  </div>
+
+  <div class="surface-card section">
+    <h3>Purchase Settings</h3>
+    <div class="grid-2">
+      <div class="field">
+        <label for="defaultMilkPrice">Default Milk Price (per Liter)</label>
+        <p-inputNumber id="defaultMilkPrice" formControlName="defaultMilkPrice" mode="currency" currency="INR" locale="en-IN" [min]="0" styleClass="w-full"></p-inputNumber>
+      </div>
+      <div class="field">
+        <label for="defaultCurdPrice">Default Curd Price (per Liter)</label>
+        <p-inputNumber id="defaultCurdPrice" formControlName="defaultCurdPrice" mode="currency" currency="INR" locale="en-IN" [min]="0" styleClass="w-full"></p-inputNumber>
+      </div>
+    </div>
+    <p class="hint">Product-level rates are managed under Purchases → Manage Products.</p>
+  </div>
+
+  <div class="surface-card section">
+    <h3>Salary Settings</h3>
+    <div class="grid-2">
+      <div class="field">
+        <label for="calcMethod">Calculation Method</label>
+        <p-select id="calcMethod" [options]="calculationMethodOptions" optionLabel="label" optionValue="value" [ngModel]="'daily_rate'" [ngModelOptions]="{standalone: true}" [disabled]="true" styleClass="w-full"></p-select>
+      </div>
+      <div class="field">
+        <label for="halfDayFactor">Half-Day Deduction Factor</label>
+        <p-inputNumber id="halfDayFactor" formControlName="halfDayFactor" [min]="0" [max]="1" [step]="0.1" [minFractionDigits]="1" styleClass="w-full"></p-inputNumber>
+      </div>
+      <div class="field field-inline">
+        <label>Weekly Off Is Paid</label>
+        <p-toggleswitch formControlName="weeklyOffPaid"></p-toggleswitch>
+      </div>
+      <div class="field field-inline">
+        <label>Paid Leave Counts as Present</label>
+        <p-toggleswitch formControlName="paidLeaveCountsAsPresent"></p-toggleswitch>
+      </div>
+    </div>
+  </div>
+
+  <div class="surface-card section">
+    <h3>Application Settings</h3>
+    <div class="grid-2">
+      <div class="field field-inline">
+        <label>Allow Previous-Date Editing</label>
+        <p-toggleswitch formControlName="allowPreviousDateEditing"></p-toggleswitch>
+      </div>
+      <div class="field field-inline">
+        <label>Allow Multiple Daily Sales Entries</label>
+        <p-toggleswitch formControlName="allowMultipleDailySalesEntries"></p-toggleswitch>
+      </div>
+      <div class="field field-inline">
+        <label>Require Daily Closing</label>
+        <p-toggleswitch formControlName="requireDailyClosing"></p-toggleswitch>
+      </div>
+    </div>
+    <p class="hint">
+      Note: "Allow Multiple Daily Sales Entries" is a database-level constraint (a unique index on sale date).
+      Changing this toggle here does not yet relax that constraint — see the README for the migration needed.
+    </p>
+  </div>
+
+  <div class="form-actions">
+    <button pButton type="submit" label="Save Settings" icon="pi pi-check" [loading]="submitting()"></button>
+  </div>
+</form>

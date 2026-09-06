@@ -1,0 +1,11 @@
+<header class="navbar">
+  <button pButton type="button" icon="pi pi-bars" class="p-button-text menu-toggle" (click)="toggleSidebar.emit()"></button>
+
+  <div class="navbar-spacer"></div>
+
+  <div class="navbar-user">
+    <span class="user-name">{{ auth.currentUserName() }}</span>
+    <p-menu #menu [model]="userMenuItems" [popup]="true" appendTo="body"></p-menu>
+    <button pButton type="button" icon="pi pi-user" class="p-button-rounded p-button-text" (click)="menu.toggle($event)"></button>
+  </div>
+</header>

@@ -1,0 +1,54 @@
+<div class="page-header">
+  <h2>Salary</h2>
+  <p-datepicker
+    [ngModel]="selectedMonth()"
+    (ngModelChange)="onMonthChange($event)"
+    view="month"
+    dateFormat="MM yy"
+    [showIcon]="true">
+  </p-datepicker>
+</div>
+
+<div class="surface-card">
+  <p-table [value]="staffService.activeStaff()" [loading]="staffService.loading()" responsiveLayout="stack" [breakpoint]="'768px'">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Staff</th>
+        <th>Salary Type</th>
+        <th>Final Salary</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-staff>
+      <tr>
+        <td>{{ staff.name }}</td>
+        <td class="capitalize">{{ staff.salaryType }}</td>
+        <td>
+          @if (finalSalaryFor(staff) !== null) {
+            {{ finalSalaryFor(staff)! | inrCurrency }}
+          } @else {
+            —
+          }
+        </td>
+        <td>
+          <p-tag
+            [severity]="statusFor(staff) === 'paid' ? 'success' : statusFor(staff) === 'partially_paid' ? 'warn' : 'secondary'"
+            [value]="statusFor(staff) === 'Not Generated' ? 'Not Generated' : statusFor(staff)">
+          </p-tag>
+        </td>
+        <td>
+          <button pButton
+            [label]="finalSalaryFor(staff) !== null ? 'View / Recalculate' : 'Generate'"
+            icon="pi pi-calculator"
+            class="p-button-sm"
+            (click)="openSalaryForm(staff)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="5">No active staff.</td></tr>
+    </ng-template>
+  </p-table>
+</div>

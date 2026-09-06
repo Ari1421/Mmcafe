@@ -1,0 +1,58 @@
+// ============================================================================
+// GLOBAL THEME — warm cafe palette, light surface + dark sidebar (see
+// layout/sidebar). All components must reference these variables instead of
+// hard-coding colors.
+// ============================================================================
+
+:root {
+  --primary: #8b5e34;
+  --primary-hover: #714a29;
+  --surface: #f7f3ee;
+  --surface-card: #ffffff;
+  --text-primary: #2c231d;
+  --text-secondary: #6b5f56;
+  --border: #e7ded3;
+  --success: #2e7d32;
+  --warning: #ed6c02;
+  --danger: #d32f2f;
+
+  --radius-card: 14px;
+  --shadow-card: 0 4px 16px rgba(43, 32, 20, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--surface);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.w-full {
+  width: 100%;
+}
+
+// Shared card look, used by summary cards / list panels across all modules
+.surface-card {
+  background: var(--surface-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: clamp(0.9rem, 3vw, 1.5rem);
+}
+
+// PrimeNG Password/InputText full-width helper
+.p-password,
+.p-password-input {
+  width: 100%;
+}

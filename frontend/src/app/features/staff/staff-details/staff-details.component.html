@@ -1,0 +1,78 @@
+@if (staff(); as s) {
+  <div class="page-header">
+    <div>
+      <h2>{{ s.name }}</h2>
+      <p class="subtitle">{{ s.designation || 'No designation' }} · {{ s.mobile || 'No mobile on file' }}</p>
+    </div>
+    <div class="header-actions">
+      <a pButton routerLink="/attendance" icon="pi pi-calendar-check" label="Mark Attendance" class="p-button-outlined"></a>
+      @if (auth.isAdmin()) {
+        <button pButton icon="pi pi-plus" label="Add Advance" (click)="openAddAdvance()"></button>
+      }
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="surface-card summary-card">
+      <span class="label">Salary</span>
+      <span class="value">
+        @if (s.salaryType === 'monthly') { {{ s.monthlySalary | inrCurrency }} / month }
+        @else { {{ s.dailySalary | inrCurrency }} / day }
+      </span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Total Outstanding Advances</span>
+      <span class="value">{{ totalAdvances | inrCurrency }}</span>
+    </div>
+    <div class="surface-card summary-card">
+      <span class="label">Status</span>
+      <p-tag [severity]="s.active ? 'success' : 'danger'" [value]="s.active ? 'Active' : 'Inactive'"></p-tag>
+    </div>
+  </div>
+
+  <div class="surface-card">
+    <h3>Advance History</h3>
+    <p-table [value]="advances()" [loading]="loading()" responsiveLayout="stack" [breakpoint]="'768px'">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Date</th>
+          <th>Amount</th>
+          <th>Payment Mode</th>
+          <th>Notes</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-advance>
+        <tr>
+          <td>{{ advance.advanceDate | indiaDate }}</td>
+          <td>{{ advance.amount | inrCurrency }}</td>
+          <td class="capitalize">{{ advance.paymentMode }}</td>
+          <td>{{ advance.notes || '—' }}</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr><td colspan="4">No advances recorded.</td></tr>
+      </ng-template>
+    </p-table>
+  </div>
+}
+
+<p-dialog [(visible)]="dialogOpen" [modal]="true" [style]="{width: '420px'}" header="Add Staff Advance">
+  <form [formGroup]="form" (ngSubmit)="saveAdvance()" class="dialog-form">
+    <div class="field">
+      <label for="advanceDate">Date</label>
+      <p-datepicker id="advanceDate" formControlName="advanceDate" dateFormat="dd-mm-yy" [showIcon]="true" styleClass="w-full"></p-datepicker>
+    </div>
+    <div class="field">
+      <label for="amount">Amount</label>
+      <p-inputNumber id="amount" formControlName="amount" mode="currency" currency="INR" locale="en-IN" [min]="0.01" styleClass="w-full"></p-inputNumber>
+    </div>
+    <div class="field">
+      <label for="paymentMode">Payment Mode</label>
+      <p-select id="paymentMode" formControlName="paymentMode" [options]="paymentModeOptions" optionLabel="label" optionValue="value" styleClass="w-full"></p-select>
+    </div>
+    <div class="dialog-actions">
+      <button pButton type="button" label="Cancel" class="p-button-text" (click)="dialogOpen.set(false)"></button>
+      <button pButton type="submit" label="Save" icon="pi pi-check" [loading]="submitting()"></button>
+    </div>
+  </form>
+</p-dialog>

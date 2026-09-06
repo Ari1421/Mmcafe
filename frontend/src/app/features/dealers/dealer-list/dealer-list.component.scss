@@ -1,0 +1,15 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  h2 { margin: 0; }
+}
+
+.clickable-row { cursor: pointer; }
+.negative-balance { color: var(--danger); font-weight: 600; }
+
+.dialog-form { display: flex; flex-direction: column; gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: 0.35rem; label { font-weight: 600; font-size: 0.85rem; } }
+.field-inline { flex-direction: row; align-items: center; justify-content: space-between; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; }

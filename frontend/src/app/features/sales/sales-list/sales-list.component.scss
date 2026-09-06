@@ -1,0 +1,10 @@
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; h2 { margin: 0; } }
+.filters { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+.filter-field { display: flex; flex-direction: column; gap: 0.3rem; min-width: 160px; flex: 1; label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); } }
+.filter-field.grow { flex: 2; }
+.summary-strip { display: flex; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap;
+  .label { display: block; font-size: 0.8rem; color: var(--text-secondary); }
+  .value { display: block; font-size: 1.25rem; font-weight: 700; }
+  .value.primary { color: var(--primary); }
+}
+.clickable-row { cursor: pointer; }

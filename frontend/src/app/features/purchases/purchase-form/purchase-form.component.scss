@@ -1,0 +1,38 @@
+.page-header { margin-bottom: 1rem; h2 { margin: 0; } }
+
+.form-card { max-width: 560px; }
+
+.purchase-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  label { font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; }
+}
+
+.form-error { color: var(--danger); }
+.hint { color: var(--text-secondary); font-size: 0.75rem; }
+
+.total-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border-radius: 10px;
+  font-size: 1.1rem;
+
+  strong { color: var(--primary); }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

@@ -1,0 +1,18 @@
+.page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; h2 { margin: 0; } }
+.header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.summary-grid.secondary { margin-bottom: 1.25rem; }
+.summary-card { display: flex; flex-direction: column; gap: 0.3rem;
+  .label { font-size: 0.78rem; color: var(--text-secondary); }
+  .value { font-size: 1.3rem; font-weight: 700; }
+  .value.negative { color: var(--danger); }
+  .sub { font-size: 0.72rem; color: var(--text-secondary); }
+}
+.summary-card.small .value { font-size: 1.05rem; }
+
+.charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+.chart-card h3 { margin-top: 0; }
+.empty-note { color: var(--text-secondary); font-size: 0.9rem; }
+
+td.negative { color: var(--danger); }
