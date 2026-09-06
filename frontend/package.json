@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "ng build && wrangler deploy",
+    "deploy:dry-run": "ng build && wrangler deploy --dry-run"
   },
   "private": true,
   "dependencies": {
@@ -17,11 +19,11 @@
     "@angular/forms": "^21.0.0",
     "@angular/platform-browser": "^21.0.0",
     "@angular/router": "^21.0.0",
+    "@primeuix/themes": "^1.0.0",
     "@supabase/supabase-js": "^2.45.0",
     "chart.js": "^4.4.0",
-    "primeng": "^21.0.0",
     "primeicons": "^7.0.0",
-    "@primeuix/themes": "^1.0.0",
+    "primeng": "^21.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.0",
     "zone.js": "~0.16.0"
@@ -30,6 +32,7 @@
     "@angular-devkit/build-angular": "^21.0.0",
     "@angular/cli": "^21.0.0",
     "@angular/compiler-cli": "^21.0.0",
-    "typescript": "~5.9.0"
+    "typescript": "~5.9.0",
+    "wrangler": "^4.129.0"
   }
 }

@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Cloudflare Worker name — this becomes part of the *.workers.dev URL
+  // (<name>.<your-subdomain>.workers.dev). Rename to whatever you like;
+  // it doesn't have to match the Angular project name.
+  "name": "cafe-manager",
+  "compatibility_date": "2026-09-06",
+
+  // Pure static-assets Worker: no custom Worker script needed. Angular's
+  // build output (run `npm run build` first) is served directly from here.
+  "assets": {
+    "directory": "./dist/cafe-manager/browser",
+
+    // THE FIX for "refresh a page -> not found": Angular's Router handles
+    // paths like /sales or /dealers/<id> entirely client-side — there's no
+    // real /sales file in the build output. Without this setting, Workers
+    // only knows the static files it has (index.html, main.js, ...), so a
+    // hard refresh/direct link to /sales is a genuine 404 before Angular's
+    // JS ever gets a chance to load and take over routing.
+    // "single-page-application" tells the Worker: for any request that
+    // doesn't match a real file, serve index.html with a 200 instead of a
+    // 404 — Angular's Router then reads the URL and renders the right page.
+    "not_found_handling": "single-page-application"
+  }
+}
