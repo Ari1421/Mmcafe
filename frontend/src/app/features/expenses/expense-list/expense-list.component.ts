@@ -41,7 +41,11 @@ export class ExpenseListComponent implements OnInit {
   readonly categoryService = inject(ExpenseCategoryService);
   readonly auth = inject(AuthService);
 
-  readonly dateFrom = signal<Date | null>(null);
+  // Default to "this month" instead of no filter — expenses grow forever,
+  // so an unfiltered load was fetching the entire expense history every
+  // time this page opened. Users can still widen/clear the date pickers
+  // manually.
+  readonly dateFrom = signal<Date | null>(startOfMonth(new Date()));
   readonly dateTo = signal<Date | null>(null);
   readonly categoryId = signal<string | null>(null);
   readonly paymentMode = signal<PaymentMode | null>(null);
@@ -155,4 +159,8 @@ function toIsoDate(d: Date): string {
   const mm = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
+}
+
+function startOfMonth(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
 }

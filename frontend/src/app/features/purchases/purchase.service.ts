@@ -43,6 +43,11 @@ export class PurchaseService {
     if (filter.dealerId) query = query.eq('dealer_id', filter.dealerId);
     if (filter.productId) query = query.eq('product_id', filter.productId);
 
+    // Safety net: this table grows forever. The list page defaults to
+    // "this month" so this limit shouldn't normally bind, but it stops a
+    // manually-cleared date filter from pulling years of joined history.
+    query = query.limit(1000);
+
     const { data, error } = await query;
     this._loading.set(false);
 

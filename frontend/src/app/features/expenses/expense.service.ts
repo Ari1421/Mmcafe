@@ -39,6 +39,11 @@ export class ExpenseService {
     if (filter.paymentMode) query = query.eq('payment_mode', filter.paymentMode);
     if (filter.search) query = query.ilike('description', `%${filter.search}%`);
 
+    // Safety net: this table grows forever. The list page defaults to
+    // "this month" so this limit shouldn't normally bind, but it stops a
+    // manually-cleared date filter from pulling years of history.
+    query = query.limit(1000);
+
     const { data, error } = await query;
     this._loading.set(false);
     if (error) throw error;

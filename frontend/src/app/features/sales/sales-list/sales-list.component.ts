@@ -32,7 +32,11 @@ export class SalesListComponent implements OnInit {
   readonly salesService = inject(SalesService);
   readonly auth = inject(AuthService);
 
-  readonly dateFrom = signal<Date | null>(null);
+  // Default to "this month" instead of no filter at all — sales grow by one
+  // row a day forever, so an unfiltered load was fetching the entire
+  // history of the cafe every time this page opened, and getting slower
+  // every month. Users can still widen/clear the date pickers manually.
+  readonly dateFrom = signal<Date | null>(startOfMonth(new Date()));
   readonly dateTo = signal<Date | null>(null);
   readonly search = signal('');
 
@@ -85,4 +89,8 @@ function toIsoDate(d: Date): string {
   const mm = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
+}
+
+function startOfMonth(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
 }

@@ -30,6 +30,11 @@ export class SalesService {
     if (filter.dateTo) query = query.lte('sale_date', filter.dateTo);
     if (filter.search) query = query.ilike('notes', `%${filter.search}%`);
 
+    // Safety net: this table grows by one row a day forever. The list page
+    // defaults to "this month" so this limit shouldn't normally bind, but
+    // it stops a manually-cleared date filter from pulling years of history.
+    query = query.limit(1000);
+
     const { data, error } = await query;
     this._loading.set(false);
     if (error) throw error;
