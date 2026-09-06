@@ -1,23 +1,35 @@
 // ============================================================================
-// GLOBAL THEME — warm cafe palette, light surface + dark sidebar (see
-// layout/sidebar). All components must reference these variables instead of
-// hard-coding colors.
+// GLOBAL THEME — fresh green cafe palette, light surface + deep-green sidebar
+// (see layout/sidebar). All components must reference these variables
+// instead of hard-coding colors. --primary/--primary-hover intentionally
+// match PrimeNG's Aura "emerald" preset (500/600) so native components
+// (buttons, focus rings, toggles, …) and hand-styled chrome look like one
+// system — see app.config.ts.
 // ============================================================================
 
 :root {
-  --primary: #8b5e34;
-  --primary-hover: #714a29;
-  --surface: #f7f3ee;
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-active: #047857;
+  --primary-tint: #ecfdf5;
+  --surface: #f4faf7;
   --surface-card: #ffffff;
-  --text-primary: #2c231d;
-  --text-secondary: #6b5f56;
-  --border: #e7ded3;
-  --success: #2e7d32;
-  --warning: #ed6c02;
-  --danger: #d32f2f;
+  --text-primary: #1c2b24;
+  --text-secondary: #5c6b63;
+  --border: #dde8e1;
+  --success: #15803d;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  --sidebar-bg: #052e21;
+  --sidebar-bg-hover: #0b4a35;
+  --sidebar-text: #d7f2e6;
 
   --radius-card: 14px;
-  --shadow-card: 0 4px 16px rgba(43, 32, 20, 0.06);
+  --shadow-card: 0 4px 16px rgba(5, 46, 33, 0.06);
+
+  // Minimum comfortable touch target (WCAG 2.5.5 / mobile HIG guidance).
+  --tap-target: 44px;
 }
 
 * {
@@ -30,6 +42,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -37,6 +50,9 @@ body {
   background: var(--surface);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
+  // Kill the gray flash Android/iOS shows on every tap — buttons/links get
+  // their own hover/active styling instead.
+  -webkit-tap-highlight-color: transparent;
 }
 
 .w-full {
@@ -49,10 +65,62 @@ body {
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
   padding: clamp(0.9rem, 3vw, 1.5rem);
+  transition: box-shadow 0.2s ease;
 }
 
 // PrimeNG Password/InputText full-width helper
 .p-password,
 .p-password-input {
   width: 100%;
+}
+
+// A clear, consistent keyboard-focus ring everywhere (buttons, links, form
+// controls) instead of relying on each component's own default outline.
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+// ----------------------------------------------------------------------------
+// Mobile-friendliness: comfortable tap targets + no accidental zoom.
+// ----------------------------------------------------------------------------
+@media (max-width: 768px) {
+  // iOS Safari auto-zooms the page when a focused input's font-size is
+  // under 16px — this keeps every text field at the safe size on phones.
+  input,
+  textarea,
+  select,
+  .p-inputtext,
+  .p-select-label,
+  .p-inputnumber-input {
+    font-size: 16px !important;
+  }
+
+  .p-button:not(.p-button-sm):not(.p-button-icon-only) {
+    min-height: var(--tap-target);
+  }
+
+  .p-button-icon-only {
+    width: var(--tap-target);
+    height: var(--tap-target);
+  }
+}
+
+// Page header used by every feature page: title + primary action. Stacks
+// on narrow screens so a long title never forces the action button off
+// the edge of the screen or shrinks it to an unusable size.
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 0.6rem;
+
+    h2 {
+      font-size: 1.15rem;
+    }
+
+    button.p-button {
+      width: 100%;
+    }
+  }
 }

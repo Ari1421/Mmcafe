@@ -92,8 +92,12 @@ begin
   ),
   ordered as (
     select *,
-      row_number() over (order by entry_date, sort_ts) as rn
-    from entries
+      -- Qualified with the "e" alias: a bare "entry_date"/"sort_ts" here is
+      -- ambiguous between this CTE's column and the plpgsql OUT parameter
+      -- of the same name declared in RETURNS TABLE above (Postgres error
+      -- 42702 "column reference is ambiguous") — that was the live bug.
+      row_number() over (order by e.entry_date, e.sort_ts) as rn
+    from entries e
   )
   select
     o.entry_date,

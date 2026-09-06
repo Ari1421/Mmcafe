@@ -43,9 +43,9 @@ export class ReportsComponent implements OnInit {
     return {
       labels: days.map((d) => d.reportDate.slice(5)),
       datasets: [
-        { label: 'Sales', data: days.map((d) => d.totalSales), borderColor: '#8b5e34', tension: 0.3 },
-        { label: 'Expenses', data: days.map((d) => d.totalExpense), borderColor: '#d32f2f', tension: 0.3 },
-        { label: 'Net Income', data: days.map((d) => d.netIncome), borderColor: '#2e7d32', tension: 0.3 }
+        { label: 'Sales', data: days.map((d) => d.totalSales), borderColor: '#059669', tension: 0.3 },
+        { label: 'Expenses', data: days.map((d) => d.totalExpense), borderColor: '#dc2626', tension: 0.3 },
+        { label: 'Net Income', data: days.map((d) => d.netIncome), borderColor: '#0d9488', tension: 0.3 }
       ]
     };
   };
@@ -55,15 +55,15 @@ export class ReportsComponent implements OnInit {
     return {
       labels: days.map((d) => d.reportDate.slice(5)),
       datasets: [
-        { label: 'Cash', data: days.map((d) => d.cashSales), backgroundColor: '#8b5e34' },
-        { label: 'Online', data: days.map((d) => d.onlineSales), backgroundColor: '#c9a06a' }
+        { label: 'Cash', data: days.map((d) => d.cashSales), backgroundColor: '#059669' },
+        { label: 'Online', data: days.map((d) => d.onlineSales), backgroundColor: '#6ee7b7' }
       ]
     };
   };
 
   readonly expensePieData = () => {
     const breakdown = this.reportsService.expenseBreakdown();
-    const palette = ['#8b5e34', '#c9a06a', '#a3785a', '#6b4a2f', '#d9bd9a', '#5a3d24', '#e0c9ac'];
+    const palette = ['#059669', '#34d399', '#0d9488', '#065f46', '#6ee7b7', '#047857', '#a7f3d0'];
     return {
       labels: breakdown.map((b) => b.categoryName),
       datasets: [{ data: breakdown.map((b) => b.totalAmount), backgroundColor: palette }]

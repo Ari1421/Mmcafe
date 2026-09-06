@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit {
     if (!s) return null;
     return {
       labels: ['Cash', 'Online'],
-      datasets: [{ data: [s.cashSales, s.onlineSales], backgroundColor: ['#8b5e34', '#c9a06a'] }]
+      datasets: [{ data: [s.cashSales, s.onlineSales], backgroundColor: ['#059669', '#6ee7b7'] }]
     };
   });
 
@@ -41,8 +41,8 @@ export class DashboardComponent implements OnInit {
         {
           label: 'Sales',
           data: trend.map((d) => d.totalSales),
-          borderColor: '#8b5e34',
-          backgroundColor: 'rgba(139,94,52,0.15)',
+          borderColor: '#059669',
+          backgroundColor: 'rgba(5,150,105,0.15)',
           tension: 0.3,
           fill: true
         }
@@ -52,7 +52,7 @@ export class DashboardComponent implements OnInit {
 
   readonly expensePieData = computed(() => {
     const breakdown = this.dashboardService.expenseBreakdown();
-    const palette = ['#8b5e34', '#c9a06a', '#a3785a', '#6b4a2f', '#d9bd9a', '#5a3d24', '#e0c9ac'];
+    const palette = ['#059669', '#34d399', '#0d9488', '#065f46', '#6ee7b7', '#047857', '#a7f3d0'];
     return {
       labels: breakdown.map((b) => b.categoryName),
       datasets: [{ data: breakdown.map((b) => b.totalAmount), backgroundColor: palette }]
