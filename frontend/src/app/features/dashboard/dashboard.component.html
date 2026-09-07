@@ -1,36 +1,103 @@
 <div class="page-header">
-  <h2>Dashboard</h2>
-  <span class="today-label">{{ todayLabel | indiaDate }}</span>
+  <div>
+    <h2>{{ greeting() }}, {{ auth.currentUserName() || 'there' }} 👋</h2>
+    <span class="today-label">{{ todayLabel | indiaDate }}</span>
+  </div>
 </div>
 
 @if (dashboardService.summary(); as s) {
   <div class="summary-grid">
-    <div class="surface-card summary-card">
+    <div class="surface-card summary-card clickable accent-sales" (click)="goToSales()">
+      <div class="card-top">
+        <span class="icon-chip"><i class="pi pi-indian-rupee"></i></span>
+        @if (salesDeltaPct(); as delta) {
+          <span class="delta-badge" [class.up]="delta >= 0" [class.down]="delta < 0">
+            <i [class]="delta >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+            {{ delta | number: '1.0-0' }}% vs yesterday
+          </span>
+        }
+      </div>
       <span class="label">Today's Total Sales</span>
       <span class="value">{{ s.totalSales | inrCurrency }}</span>
       <span class="sub">Cash {{ s.cashSales | inrCurrency }} · Online {{ s.onlineSales | inrCurrency }}</span>
     </div>
-    <div class="surface-card summary-card">
+
+    <div class="surface-card summary-card clickable accent-expense" (click)="goToExpenses()">
+      <div class="card-top">
+        <span class="icon-chip"><i class="pi pi-wallet"></i></span>
+      </div>
       <span class="label">Today's Expenses</span>
       <span class="value">{{ s.totalExpense | inrCurrency }}</span>
       <span class="sub">Cash {{ s.cashExpenses | inrCurrency }} · Online {{ s.onlineExpenses | inrCurrency }}</span>
     </div>
-    <div class="surface-card summary-card">
+
+    <div class="surface-card summary-card" [style.--accent]="netIncomeColor(s.netIncome)">
+      <div class="card-top">
+        <span class="icon-chip">
+          <i [class]="s.netIncome < 0 ? 'pi pi-arrow-down' : 'pi pi-arrow-up'"></i>
+        </span>
+        @if (netIncomeDeltaPct(); as delta) {
+          <span class="delta-badge" [class.up]="delta >= 0" [class.down]="delta < 0">
+            <i [class]="delta >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+            {{ delta | number: '1.0-0' }}%
+          </span>
+        }
+      </div>
       <span class="label">Net Income</span>
-      <span class="value" [class.negative]="s.netIncome < 0">{{ s.netIncome | inrCurrency }}</span>
+      <span class="value" [style.color]="netIncomeColor(s.netIncome)">{{ s.netIncome | inrCurrency }}</span>
+      <span class="sub">Today's sales minus every cost</span>
     </div>
-    <div class="surface-card summary-card">
+
+    <div class="surface-card summary-card clickable accent-milk" (click)="goToPurchases()">
+      <div class="card-top">
+        <span class="icon-chip"><i class="pi pi-shopping-cart"></i></span>
+      </div>
       <span class="label">Milk / Curd Purchased Today</span>
       <span class="value">{{ s.milkQty }} L / {{ s.curdQty }} L</span>
+      <span class="sub">Tap to view purchase history</span>
     </div>
-    <div class="surface-card summary-card">
+
+    <div
+      class="surface-card summary-card clickable"
+      [class.accent-warning]="hasDealerOutstanding()"
+      [class.accent-milk]="!hasDealerOutstanding()"
+      (click)="goToDealers()">
+      <div class="card-top">
+        <span class="icon-chip"><i class="pi pi-truck"></i></span>
+        @if (hasDealerOutstanding()) {
+          <span class="delta-badge warn"><i class="pi pi-exclamation-triangle"></i> Needs follow-up</span>
+        }
+      </div>
       <span class="label">Outstanding Dealer Credit</span>
       <span class="value">{{ s.dealerOutstandingTotal | inrCurrency }}</span>
+      <span class="sub">Across all dealers</span>
     </div>
-    <div class="surface-card summary-card">
+
+    <div class="surface-card summary-card clickable accent-staff" (click)="goToAttendance()">
+      <div class="card-top">
+        <span class="icon-chip"><i class="pi pi-users"></i></span>
+      </div>
       <span class="label">Staff Present / Absent</span>
       <span class="value">{{ s.staffPresent }} / {{ s.staffAbsent }}</span>
+      <div class="attendance-bar">
+        <div class="attendance-bar-fill" [style.width.%]="attendancePct()"></div>
+      </div>
+      <span class="sub">{{ attendancePct() }}% present today</span>
     </div>
+  </div>
+
+  <div class="week-strip surface-card">
+    <div class="week-stat">
+      <span class="label">This Week's Sales</span>
+      <span class="value">{{ weekTotalSales() | inrCurrency }}</span>
+    </div>
+    @if (bestDay(); as best) {
+      <div class="week-stat">
+        <span class="label">Best Day This Week</span>
+        <span class="value">{{ best.totalSales | inrCurrency }}</span>
+        <span class="sub">{{ best.reportDate | indiaDate }}</span>
+      </div>
+    }
   </div>
 
   <div class="charts-grid">
@@ -39,8 +106,12 @@
       <p-chart type="doughnut" [data]="salesPieData()" [options]="chartOptions" height="220px"></p-chart>
     </div>
     <div class="surface-card chart-card">
-      <h3>Daily Sales Trend (Last 7 Days)</h3>
+      <h3>Sales / Expense / Net Trend (Last 7 Days)</h3>
       <p-chart type="line" [data]="trendLineData()" [options]="chartOptions" height="220px"></p-chart>
+    </div>
+    <div class="surface-card chart-card">
+      <h3>Cash vs Online (Last 7 Days)</h3>
+      <p-chart type="bar" [data]="cashOnlineTrendData()" [options]="chartOptions" height="220px"></p-chart>
     </div>
     <div class="surface-card chart-card">
       <h3>Expense Breakdown (This Month)</h3>

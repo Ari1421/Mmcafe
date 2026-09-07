@@ -10,9 +10,10 @@
     </ng-template>
     <ng-template pTemplate="body" let-category>
       <tr>
-        <td>{{ category.name }}</td>
-        <td><p-tag [severity]="category.active ? 'success' : 'danger'" [value]="category.active ? 'Active' : 'Inactive'"></p-tag></td>
+        <td><span class="p-datatable-column-title">Name</span>{{ category.name }}</td>
+        <td><span class="p-datatable-column-title">Status</span><p-tag [severity]="category.active ? 'success' : 'danger'" [value]="category.active ? 'Active' : 'Inactive'"></p-tag></td>
         <td>
+          <span class="p-datatable-column-title">Actions</span>
           <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(category)"></button>
           <button pButton [icon]="category.active ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleActive(category)"></button>
         </td>

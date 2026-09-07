@@ -43,10 +43,10 @@
       </ng-template>
       <ng-template pTemplate="body" let-advance>
         <tr>
-          <td>{{ advance.advanceDate | indiaDate }}</td>
-          <td>{{ advance.amount | inrCurrency }}</td>
-          <td class="capitalize">{{ advance.paymentMode }}</td>
-          <td>{{ advance.notes || '—' }}</td>
+          <td><span class="p-datatable-column-title">Date</span>{{ advance.advanceDate | indiaDate }}</td>
+          <td><span class="p-datatable-column-title">Amount</span>{{ advance.amount | inrCurrency }}</td>
+          <td class="capitalize"><span class="p-datatable-column-title">Payment Mode</span>{{ advance.paymentMode }}</td>
+          <td><span class="p-datatable-column-title">Notes</span>{{ advance.notes || '—' }}</td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">

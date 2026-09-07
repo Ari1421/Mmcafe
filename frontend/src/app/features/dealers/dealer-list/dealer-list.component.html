@@ -18,13 +18,15 @@
     </ng-template>
     <ng-template pTemplate="body" let-dealer>
       <tr class="clickable-row" (click)="viewDetails(dealer)">
-        <td>{{ dealer.name }}</td>
-        <td>{{ dealer.mobile || '—' }}</td>
-        <td [class.negative-balance]="outstandingFor(dealer) > 0">{{ outstandingFor(dealer) | inrCurrency }}</td>
+        <td><span class="p-datatable-column-title">Name</span>{{ dealer.name }}</td>
+        <td><span class="p-datatable-column-title">Mobile</span>{{ dealer.mobile || '—' }}</td>
+        <td [class.negative-balance]="outstandingFor(dealer) > 0"><span class="p-datatable-column-title">Outstanding Balance</span>{{ outstandingFor(dealer) | inrCurrency }}</td>
         <td>
+          <span class="p-datatable-column-title">Status</span>
           <p-tag [severity]="dealer.active ? 'success' : 'danger'" [value]="dealer.active ? 'Active' : 'Inactive'"></p-tag>
         </td>
         <td>
+          <span class="p-datatable-column-title">Actions</span>
           @if (auth.isAdmin()) {
             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(dealer, $event)"></button>
           }

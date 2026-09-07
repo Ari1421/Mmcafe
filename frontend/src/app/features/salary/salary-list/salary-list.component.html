@@ -22,9 +22,10 @@
     </ng-template>
     <ng-template pTemplate="body" let-staff>
       <tr>
-        <td>{{ staff.name }}</td>
-        <td class="capitalize">{{ staff.salaryType }}</td>
+        <td><span class="p-datatable-column-title">Staff</span>{{ staff.name }}</td>
+        <td class="capitalize"><span class="p-datatable-column-title">Salary Type</span>{{ staff.salaryType }}</td>
         <td>
+          <span class="p-datatable-column-title">Final Salary</span>
           @if (finalSalaryFor(staff) !== null) {
             {{ finalSalaryFor(staff)! | inrCurrency }}
           } @else {
@@ -32,12 +33,14 @@
           }
         </td>
         <td>
+          <span class="p-datatable-column-title">Status</span>
           <p-tag
             [severity]="statusFor(staff) === 'paid' ? 'success' : statusFor(staff) === 'partially_paid' ? 'warn' : 'secondary'"
             [value]="statusFor(staff) === 'Not Generated' ? 'Not Generated' : statusFor(staff)">
           </p-tag>
         </td>
         <td>
+          <span class="p-datatable-column-title">Actions</span>
           <button pButton
             [label]="finalSalaryFor(staff) !== null ? 'View / Recalculate' : 'Generate'"
             icon="pi pi-calculator"

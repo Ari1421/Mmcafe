@@ -64,12 +64,12 @@
     </ng-template>
     <ng-template pTemplate="body" let-day>
       <tr>
-        <td>{{ day.reportDate | indiaDate }}</td>
-        <td>{{ day.totalSales | inrCurrency }}</td>
-        <td>{{ day.totalExpense | inrCurrency }}</td>
-        <td [class.negative]="day.netIncome < 0">{{ day.netIncome | inrCurrency }}</td>
-        <td>{{ day.milkQty }}</td>
-        <td>{{ day.curdQty }}</td>
+        <td><span class="p-datatable-column-title">Date</span>{{ day.reportDate | indiaDate }}</td>
+        <td><span class="p-datatable-column-title">Sales</span>{{ day.totalSales | inrCurrency }}</td>
+        <td><span class="p-datatable-column-title">Expenses</span>{{ day.totalExpense | inrCurrency }}</td>
+        <td [class.negative]="day.netIncome < 0"><span class="p-datatable-column-title">Net</span>{{ day.netIncome | inrCurrency }}</td>
+        <td><span class="p-datatable-column-title">Milk (L)</span>{{ day.milkQty }}</td>
+        <td><span class="p-datatable-column-title">Curd (L)</span>{{ day.curdQty }}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">

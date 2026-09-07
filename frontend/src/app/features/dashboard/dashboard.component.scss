@@ -15,14 +15,100 @@
 }
 
 .summary-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  // Accent color read by the icon chip / left rail below. Cards without an
+  // explicit accent-* class (Net Income, whose color depends on the value
+  // itself) set --accent inline instead — see the template.
+  --accent: var(--primary);
+  border-left: 3px solid var(--accent);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover, &:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(5, 46, 33, 0.1);
+    }
+  }
 
   .label { font-size: 0.8rem; color: var(--text-secondary); }
   .value { font-size: 1.5rem; font-weight: 700; }
   .value.negative { color: var(--danger); }
   .sub { font-size: 0.75rem; color: var(--text-secondary); }
+
+  &.accent-sales { --accent: #059669; }
+  &.accent-expense { --accent: #eb6834; }
+  &.accent-milk { --accent: #2a78d6; }
+  &.accent-staff { --accent: #4a3aa7; }
+  &.accent-warning { --accent: #fab219; }
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.15rem;
+}
+
+.icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+  font-size: 1.05rem;
+}
+
+.delta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+
+  &.up { color: #0ca30c; background: rgba(12, 163, 12, 0.1); }
+  &.down { color: #d03b3b; background: rgba(208, 59, 59, 0.1); }
+  &.warn { color: #a1660a; background: rgba(250, 178, 25, 0.16); }
+}
+
+.attendance-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(208, 59, 59, 0.18);
+  overflow: hidden;
+  margin: 0.15rem 0;
+}
+
+.attendance-bar-fill {
+  height: 100%;
+  background: #0ca30c;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.week-strip {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+
+  .week-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    .label { font-size: 0.8rem; color: var(--text-secondary); }
+    .value { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+    .sub { font-size: 0.75rem; color: var(--text-secondary); }
+  }
 }
 
 .charts-grid {

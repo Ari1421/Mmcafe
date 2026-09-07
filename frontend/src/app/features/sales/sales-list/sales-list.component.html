@@ -40,12 +40,13 @@
     </ng-template>
     <ng-template pTemplate="body" let-sale>
       <tr class="clickable-row" (click)="editSale(sale.id)">
-        <td>{{ sale.saleDate | indiaDate }}</td>
-        <td>{{ sale.cashAmount | inrCurrency }}</td>
-        <td>{{ sale.onlineAmount | inrCurrency }}</td>
-        <td><strong>{{ sale.totalAmount | inrCurrency }}</strong></td>
-        <td>{{ sale.notes || '—' }}</td>
+        <td><span class="p-datatable-column-title">Date</span>{{ sale.saleDate | indiaDate }}</td>
+        <td><span class="p-datatable-column-title">Cash</span>{{ sale.cashAmount | inrCurrency }}</td>
+        <td><span class="p-datatable-column-title">Online</span>{{ sale.onlineAmount | inrCurrency }}</td>
+        <td><span class="p-datatable-column-title">Total</span><strong>{{ sale.totalAmount | inrCurrency }}</strong></td>
+        <td><span class="p-datatable-column-title">Notes</span>{{ sale.notes || '—' }}</td>
         <td>
+          <span class="p-datatable-column-title">Actions</span>
           @if (auth.hasPermission('canAddSales')) {
             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editSale(sale.id); $event.stopPropagation()"></button>
           }

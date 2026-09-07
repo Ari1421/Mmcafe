@@ -124,3 +124,53 @@ body {
     }
   }
 }
+
+// ----------------------------------------------------------------------------
+// Responsive tables. PrimeNG's `responsiveLayout="stack"` only toggles the
+// header off and lays each cell out as a flex row on narrow screens — it
+// does NOT label the values for you. Every list/detail table's body
+// template now includes a `<span class="p-datatable-column-title">Label
+// </span>` per cell (matching PrimeNG's expected hook for this), and the
+// rules below turn that into an actual readable card per row instead of a
+// wall of unlabeled numbers, which is what made mobile tables confusing.
+// ----------------------------------------------------------------------------
+@media (max-width: 768px) {
+  .p-datatable-tbody > tr {
+    display: block;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+
+  .p-datatable-tbody > tr:last-child {
+    margin-bottom: 0;
+  }
+
+  // One labeled row per field, divided by a hairline; the value is
+  // right-aligned against its label the way a receipt/bill lists items.
+  .p-datatable-tbody > tr > td {
+    padding: 0.65rem 0.9rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    text-align: right;
+  }
+
+  .p-datatable-tbody > tr > td:last-child {
+    border-bottom: 0 !important;
+  }
+
+  .p-datatable-column-title {
+    flex-shrink: 0;
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    text-align: left;
+  }
+
+  // A row whose only "value" is a row of action buttons — keep those
+  // buttons from being squeezed by the label.
+  .p-datatable-tbody > tr > td:has(.p-button) {
+    gap: 0.5rem;
+  }
+}

@@ -18,14 +18,16 @@
     </ng-template>
     <ng-template pTemplate="body" let-product>
       <tr>
-        <td>{{ product.name }}</td>
-        <td>{{ product.unit }}</td>
-        <td>{{ product.defaultRate | inrCurrency }}</td>
+        <td><span class="p-datatable-column-title">Name</span>{{ product.name }}</td>
+        <td><span class="p-datatable-column-title">Unit</span>{{ product.unit }}</td>
+        <td><span class="p-datatable-column-title">Default Rate</span>{{ product.defaultRate | inrCurrency }}</td>
         <td>
+          <span class="p-datatable-column-title">Status</span>
           <p-tag [severity]="product.active ? 'success' : 'danger'" [value]="product.active ? 'Active' : 'Inactive'"></p-tag>
         </td>
         @if (auth.isAdmin()) {
           <td>
+            <span class="p-datatable-column-title">Actions</span>
             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(product)"></button>
             <button pButton [icon]="product.active ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleActive(product)"></button>
           </td>

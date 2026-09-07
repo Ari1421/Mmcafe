@@ -48,12 +48,13 @@
     </ng-template>
     <ng-template pTemplate="body" let-expense>
       <tr>
-        <td>{{ expense.expenseDate | indiaDate }}</td>
-        <td>{{ expense.categoryName }}</td>
-        <td>{{ expense.description || '—' }}</td>
-        <td>{{ expense.amount | inrCurrency }}</td>
-        <td class="capitalize">{{ expense.paymentMode }}</td>
+        <td><span class="p-datatable-column-title">Date</span>{{ expense.expenseDate | indiaDate }}</td>
+        <td><span class="p-datatable-column-title">Category</span>{{ expense.categoryName }}</td>
+        <td><span class="p-datatable-column-title">Description</span>{{ expense.description || '—' }}</td>
+        <td><span class="p-datatable-column-title">Amount</span>{{ expense.amount | inrCurrency }}</td>
+        <td class="capitalize"><span class="p-datatable-column-title">Payment</span>{{ expense.paymentMode }}</td>
         <td>
+          <span class="p-datatable-column-title">Actions</span>
           @if (auth.hasPermission('canAddExpenses')) {
             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(expense)"></button>
           }

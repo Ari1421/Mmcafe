@@ -30,9 +30,10 @@
     </ng-template>
     <ng-template pTemplate="body" let-row>
       <tr>
-        <td>{{ row.staffName }}</td>
-        <td>{{ row.designation || '—' }}</td>
+        <td><span class="p-datatable-column-title">Employee</span>{{ row.staffName }}</td>
+        <td><span class="p-datatable-column-title">Designation</span>{{ row.designation || '—' }}</td>
         <td>
+          <span class="p-datatable-column-title">Status</span>
           <p-select
             [ngModel]="row.currentStatus"
             (ngModelChange)="setStatus(row, $event)"

@@ -19,18 +19,20 @@
     </ng-template>
     <ng-template pTemplate="body" let-staff>
       <tr class="clickable-row" (click)="viewDetails(staff)">
-        <td>{{ staff.name }}</td>
-        <td>{{ staff.designation || '—' }}</td>
-        <td>{{ staff.mobile || '—' }}</td>
+        <td><span class="p-datatable-column-title">Name</span>{{ staff.name }}</td>
+        <td><span class="p-datatable-column-title">Role</span>{{ staff.designation || '—' }}</td>
+        <td><span class="p-datatable-column-title">Mobile</span>{{ staff.mobile || '—' }}</td>
         <td>
+          <span class="p-datatable-column-title">Salary</span>
           @if (staff.salaryType === 'monthly') {
             {{ staff.monthlySalary | inrCurrency }} / month
           } @else {
             {{ staff.dailySalary | inrCurrency }} / day
           }
         </td>
-        <td><p-tag [severity]="staff.active ? 'success' : 'danger'" [value]="staff.active ? 'Active' : 'Inactive'"></p-tag></td>
+        <td><span class="p-datatable-column-title">Status</span><p-tag [severity]="staff.active ? 'success' : 'danger'" [value]="staff.active ? 'Active' : 'Inactive'"></p-tag></td>
         <td>
+          <span class="p-datatable-column-title">Actions</span>
           @if (auth.isAdmin()) {
             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(staff); $event.stopPropagation()"></button>
             <button pButton [icon]="staff.active ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleActive(staff); $event.stopPropagation()"></button>

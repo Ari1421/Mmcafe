@@ -45,14 +45,15 @@
     </ng-template>
     <ng-template pTemplate="body" let-purchase>
       <tr>
-        <td>{{ purchase.purchaseDate | indiaDate }}</td>
-        <td>{{ purchase.dealerName }}</td>
-        <td>{{ purchase.productName }}</td>
-        <td>{{ purchase.quantity }} {{ purchase.unit }}</td>
-        <td>{{ purchase.rate | inrCurrency }}</td>
-        <td>{{ purchase.totalAmount | inrCurrency }}</td>
-        <td class="capitalize">{{ purchase.paymentType }}</td>
+        <td><span class="p-datatable-column-title">Date</span>{{ purchase.purchaseDate | indiaDate }}</td>
+        <td><span class="p-datatable-column-title">Dealer</span>{{ purchase.dealerName }}</td>
+        <td><span class="p-datatable-column-title">Product</span>{{ purchase.productName }}</td>
+        <td><span class="p-datatable-column-title">Qty</span>{{ purchase.quantity }} {{ purchase.unit }}</td>
+        <td><span class="p-datatable-column-title">Rate</span>{{ purchase.rate | inrCurrency }}</td>
+        <td><span class="p-datatable-column-title">Total</span>{{ purchase.totalAmount | inrCurrency }}</td>
+        <td class="capitalize"><span class="p-datatable-column-title">Payment</span>{{ purchase.paymentType }}</td>
         <td>
+          <span class="p-datatable-column-title">Actions</span>
           @if (auth.hasPermission('canAddExpenses')) {
             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editPurchase(purchase.id)"></button>
           }

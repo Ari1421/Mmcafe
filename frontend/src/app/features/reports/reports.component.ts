@@ -12,6 +12,18 @@ import { ErrorHandlerService } from '../../core/services/error-handler.service';
 
 type PresetKey = 'today' | 'yesterday' | 'thisWeek' | 'lastWeek' | 'thisMonth' | 'lastMonth' | 'custom';
 
+// See dashboard.component.ts for how these are validated (dataviz skill):
+// green/orange/blue is a 3-slot categorical set that passes, with Expenses
+// getting a dashed stroke as the required secondary encoding for its 6-8
+// band CVD warning against green. The expense-category pie caps at 3
+// distinct hues + a neutral "Other" bucket for the same reason.
+const COLOR_SALES = '#059669';
+const COLOR_EXPENSE = '#eb6834';
+const COLOR_NET = '#2a78d6';
+const COLOR_ONLINE = '#2a78d6';
+const CATEGORY_COLORS = ['#2a78d6', '#eb6834', '#1baf7a'];
+const COLOR_OTHER = '#9c9c96';
+
 @Component({
   selector: 'app-reports',
   standalone: true,
@@ -43,9 +55,10 @@ export class ReportsComponent implements OnInit {
     return {
       labels: days.map((d) => d.reportDate.slice(5)),
       datasets: [
-        { label: 'Sales', data: days.map((d) => d.totalSales), borderColor: '#059669', tension: 0.3 },
-        { label: 'Expenses', data: days.map((d) => d.totalExpense), borderColor: '#dc2626', tension: 0.3 },
-        { label: 'Net Income', data: days.map((d) => d.netIncome), borderColor: '#0d9488', tension: 0.3 }
+        { label: 'Sales', data: days.map((d) => d.totalSales), borderColor: COLOR_SALES, tension: 0.3 },
+        // Dashed: required secondary encoding for the green/orange CVD warning pair.
+        { label: 'Expenses', data: days.map((d) => d.totalExpense), borderColor: COLOR_EXPENSE, borderDash: [6, 4], tension: 0.3 },
+        { label: 'Net Income', data: days.map((d) => d.netIncome), borderColor: COLOR_NET, tension: 0.3 }
       ]
     };
   };
@@ -55,19 +68,34 @@ export class ReportsComponent implements OnInit {
     return {
       labels: days.map((d) => d.reportDate.slice(5)),
       datasets: [
-        { label: 'Cash', data: days.map((d) => d.cashSales), backgroundColor: '#059669' },
-        { label: 'Online', data: days.map((d) => d.onlineSales), backgroundColor: '#6ee7b7' }
+        { label: 'Cash', data: days.map((d) => d.cashSales), backgroundColor: COLOR_SALES },
+        { label: 'Online', data: days.map((d) => d.onlineSales), backgroundColor: COLOR_ONLINE }
       ]
     };
   };
 
   readonly expensePieData = () => {
-    const breakdown = this.reportsService.expenseBreakdown();
-    const palette = ['#059669', '#34d399', '#0d9488', '#065f46', '#6ee7b7', '#047857', '#a7f3d0'];
-    return {
-      labels: breakdown.map((b) => b.categoryName),
-      datasets: [{ data: breakdown.map((b) => b.totalAmount), backgroundColor: palette }]
-    };
+    // A pie's slices can end up adjacent in any order, so this is validated
+    // under "all pairs" rather than a fixed sequence — only the palette's
+    // first 3 categorical hues clear that bar. Categories beyond the top 3
+    // (by amount) fold into one neutral "Other" slice instead of getting a
+    // 4th+ hue that can't reliably be told apart.
+    const breakdown = [...this.reportsService.expenseBreakdown()].sort((a, b) => b.totalAmount - a.totalAmount);
+    const top = breakdown.slice(0, 3);
+    const rest = breakdown.slice(3);
+    const otherTotal = rest.reduce((sum, b) => sum + b.totalAmount, 0);
+
+    const labels = top.map((b) => b.categoryName);
+    const data = top.map((b) => b.totalAmount);
+    const colors = CATEGORY_COLORS.slice(0, top.length);
+
+    if (otherTotal > 0) {
+      labels.push(`Other (${rest.length})`);
+      data.push(otherTotal);
+      colors.push(COLOR_OTHER);
+    }
+
+    return { labels, datasets: [{ data, backgroundColor: colors }] };
   };
 
   readonly chartOptions = { plugins: { legend: { position: 'bottom' } }, maintainAspectRatio: false };

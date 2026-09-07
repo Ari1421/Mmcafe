@@ -43,11 +43,11 @@
       </ng-template>
       <ng-template pTemplate="body" let-entry>
         <tr>
-          <td>{{ entry.entryDate | indiaDate }}</td>
-          <td>{{ entry.description }}</td>
-          <td>{{ entry.debit ? (entry.debit | inrCurrency) : '—' }}</td>
-          <td>{{ entry.credit ? (entry.credit | inrCurrency) : '—' }}</td>
-          <td>{{ entry.runningBalance | inrCurrency }}</td>
+          <td><span class="p-datatable-column-title">Date</span>{{ entry.entryDate | indiaDate }}</td>
+          <td><span class="p-datatable-column-title">Description</span>{{ entry.description }}</td>
+          <td><span class="p-datatable-column-title">Debit</span>{{ entry.debit ? (entry.debit | inrCurrency) : '—' }}</td>
+          <td><span class="p-datatable-column-title">Credit</span>{{ entry.credit ? (entry.credit | inrCurrency) : '—' }}</td>
+          <td><span class="p-datatable-column-title">Balance</span>{{ entry.runningBalance | inrCurrency }}</td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
@@ -71,11 +71,12 @@
         </ng-template>
         <ng-template pTemplate="body" let-rate>
           <tr>
-            <td>{{ rate.productName }}</td>
-            <td>{{ rate.rate | inrCurrency }}</td>
-            <td>{{ rate.effectiveFrom | indiaDate }}</td>
-            <td><p-tag [severity]="rate.active ? 'success' : 'danger'" [value]="rate.active ? 'Active' : 'Inactive'"></p-tag></td>
+            <td><span class="p-datatable-column-title">Product</span>{{ rate.productName }}</td>
+            <td><span class="p-datatable-column-title">Rate</span>{{ rate.rate | inrCurrency }}</td>
+            <td><span class="p-datatable-column-title">Effective From</span>{{ rate.effectiveFrom | indiaDate }}</td>
+            <td><span class="p-datatable-column-title">Status</span><p-tag [severity]="rate.active ? 'success' : 'danger'" [value]="rate.active ? 'Active' : 'Inactive'"></p-tag></td>
             <td>
+              <span class="p-datatable-column-title">Actions</span>
               <button pButton [icon]="rate.active ? 'pi pi-ban' : 'pi pi-check'" class="p-button-text p-button-sm" (click)="toggleRateActive(rate)"></button>
             </td>
           </tr>
