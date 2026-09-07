@@ -46,5 +46,8 @@
 }
 
 .field { display: flex; flex-direction: column; gap: 0.35rem; label { font-weight: 600; font-size: 0.85rem; } }
-.grid-2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; @media (max-width: 600px) { grid-template-columns: 1fr; } }
+// minmax(0, 1fr) so a grid cell can shrink below its content's natural
+// width instead of stretching the row (and the page) wider than the
+// screen — see settings-form.component.scss for the concrete bug this fixes.
+.grid-2 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; @media (max-width: 600px) { grid-template-columns: 1fr; } }
 .form-actions { display: flex; justify-content: flex-end; gap: 0.5rem; }

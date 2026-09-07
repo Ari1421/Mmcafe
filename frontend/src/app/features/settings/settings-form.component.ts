@@ -28,8 +28,12 @@ export class SettingsFormComponent implements OnInit {
   readonly loading = signal(false);
   readonly submitting = signal(false);
 
+  // Kept short deliberately — PrimeNG's select label doesn't truncate long
+  // text on its own, and a disabled single-option dropdown doesn't need the
+  // full explanation inline anyway. The full explanation is in the hint
+  // paragraph below the field instead (see the template).
   readonly calculationMethodOptions = [
-    { label: 'Daily Rate (Monthly Salary ÷ Working Days)', value: 'daily_rate' }
+    { label: 'Daily Rate', value: 'daily_rate' }
   ];
 
   readonly form = this.fb.group({
